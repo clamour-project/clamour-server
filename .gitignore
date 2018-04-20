@@ -1,5 +1,10 @@
 .DS_Store
 
+#eclipse files
+.settings/
+.classpath
+.project
+
 # Logs
 logs
 *.log
