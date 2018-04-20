@@ -9,8 +9,8 @@ public class Sobel {
 
 	public double[][] gradient;
 
-	public void process(String filename) {
-		int[][] img = readImg(filename);
+	public void process(BufferedImage bi) {
+		int[][] img = readImg(bi);
 		int rows = img.length;
 		int cols = img[0].length;
 
@@ -46,9 +46,8 @@ public class Sobel {
 		return mag;
 	}
 
-	private int[][] readImg(String filename) {
-		try {
-			BufferedImage bi = ImageIO.read(new File(filename));
+	
+	private int[][] readImg(BufferedImage bi) {
 			int[][] r = new int[bi.getHeight()][bi.getWidth()];
 			int[][] g = new int[bi.getHeight()][bi.getWidth()];
 			int[][] b = new int[bi.getHeight()][bi.getWidth()];
@@ -60,10 +59,6 @@ public class Sobel {
 				}
 			}
 			return g;
-		} catch (IOException e) {
-			System.out.println("Sobel says: Image I/O error");
-			return null;
-		}
 	}
 
 	public int[][] doubleToInt() {

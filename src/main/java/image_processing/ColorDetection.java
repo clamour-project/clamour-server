@@ -23,16 +23,26 @@ public class ColorDetection {
 			e.printStackTrace();
 		}
 
-		setSobel("src/main/java/image_processing/photos/" + name + ".jpg");
+		setSobel(image);
 
 		Color mainColor = determineColor();
 		System.out.println("Main color determined.");
 		colorWheel = new ColorWheel(mainColor);
 	}
+	
+	public ColorDetection(BufferedImage im) {
+		image = im;
+		
+		setSobel(image);
+		
+		Color mainColor = determineColor();
+		System.out.println("Main color determined.");
+		colorWheel = new ColorWheel(mainColor);
+	}
 
-	private void setSobel(String filename) {
+	private void setSobel(BufferedImage image) {
 		Sobel s = new Sobel();
-		s.process(filename);
+		s.process(image);
 		sobel = s.doubleToInt();
 	}
 
@@ -132,8 +142,12 @@ public class ColorDetection {
 		}
 	}
 
-	private ArrayList<Color> returnColorCombination() {
+	public ArrayList<Color> getComplementaryColors() {
 		return colorWheel.complementaryColors();
+	}
+	
+	public ArrayList<Color> getAdjacentColors() {
+		return colorWheel.adjacentColors();
 	}
 
 	private void showColorCombination() {
