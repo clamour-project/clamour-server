@@ -33,7 +33,7 @@ import image_processing.ColorDetection;
 
 @WebServlet(name = "ClamourAppEngine", urlPatterns = { "/clamour-api" })
 public class Clamour extends HttpServlet {
-
+ 
 	private static final long serialVersionUID = -5935880022820879027L;
 
 	private String X_APP_ID = "921146564076";
@@ -50,6 +50,8 @@ public class Clamour extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
+		System.out.println("Getting the photo...");
+		
 		BufferedReader br = request.getReader();
 		String line;
 		StringBuilder base64Image = new StringBuilder();
@@ -79,8 +81,10 @@ public class Clamour extends HttpServlet {
 				resp.append("types", clothesTypes.next());
 			
 			// add detected colors to response
-			resp.put("coplementary-colors", cmpColors);
-			resp.put("adjacent-colors", adjColors);
+			for(Color color : cmpColors)
+			    resp.append("coplementary-colors", color.getRGB());
+			for(Color color : adjColors)
+			    resp.append("adjacent-colors", color.getRGB());
 			
 		} catch (JSONException e) {
 			e.printStackTrace();
