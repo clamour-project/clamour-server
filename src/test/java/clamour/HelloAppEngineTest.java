@@ -5,8 +5,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Base64;
 
 import javax.servlet.ServletException;
@@ -14,12 +21,14 @@ import javax.servlet.ServletException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.google.cloud.sql.jdbc.internal.Url;
+
 public class HelloAppEngineTest {
 
 	private final static File imageFile = new File("src/main/java/image_processing/photos/dress.jpg");
 
 	@Test
-	public void test() throws IOException {
+	public void test() {
 		Clamour clamourServlet = new Clamour();
 		MockHttpServletResponse response = new MockHttpServletResponse();
 
@@ -31,16 +40,11 @@ public class HelloAppEngineTest {
 		clamourServlet.doGet(null, response);
 		Assert.assertEquals("text/plain", response.getContentType());
 		Assert.assertEquals("UTF-8", response.getCharacterEncoding());
-
-		try {
-			clamourServlet.doPost(req, response);
-		} catch (ServletException e) {
-			e.printStackTrace();
-		}
+		clamourServlet.doPost(req, response);
 
 		System.out.println(response.getWriterContent().toString());
 	}
-
+	
 	private static String encodeFileToBase64Binary(File file) {
 		String encodedfile = null;
 		try {

@@ -1,0 +1,11 @@
+{
+"skirt":["hat", "shoe", "bag", "top-shirt"],
+"dress":["hat", "shoe", "bag"],
+"shorts":["top-shirt", "shoe"],
+"suit":["hat", "shoe"],
+"pants":["hat", "shoe", "top-shirt", "sweater", "jacket-coat"],
+"top-shirt":["shoe", "pants", "shorts", "jacket-coat"],
+"jacket-coat":["hat", "shoe", "bag", "pants", "skirt", "top-shirt", "sweater"],
+"hat":["shoe", "bag", "dress", "skirt", "suit"],
+"sweater":["shoe", "hat", "bag", "pants", "jacket-coat"]
+}
