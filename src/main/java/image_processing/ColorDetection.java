@@ -103,7 +103,7 @@ public class ColorDetection {
 		if (Math.abs(ColorWheel.defineArea(c1) - ColorWheel.defineArea(c2)) == 0)
 			return Math.abs(hsb1[1] - hsb2[1]) < 0.5f || Math.abs(hsb1[2] - hsb2[2]) < 0.5f;
 		else if (Math.abs(ColorWheel.defineArea(c1) - ColorWheel.defineArea(c2)) < 2)
-			return Math.abs(hsb1[1] - hsb2[1]) < 0.2f && Math.abs(hsb1[2] - hsb2[2]) < 0.2f;
+			return Math.abs(hsb1[1] - hsb2[1]) < 0.3f && Math.abs(hsb1[2] - hsb2[2]) < 0.3f;
 		else
 			return false;
 	}
@@ -119,17 +119,7 @@ public class ColorDetection {
 		Color foundColor = new Color(found);
 		Color photoColor = new Color(photo);
 
-		float hsb2[] = new float[3];
-		Color.RGBtoHSB(foundColor.getRed(), foundColor.getGreen(), foundColor.getBlue(), hsb2);
-
-		if (ColorWheel.defineArea(foundColor)!=ColorWheel.defineArea(photoColor))
-			return false;
-
-		if ((hsb2[1]>0.6f  && hsb2[1]<0.4f) && (hsb2[2]>0.6f  && hsb2[2]<0.4f))
-			return ColorWheel.defineArea(foundColor)==ColorWheel.defineArea(photoColor);
-		else {
-			return sameColor(foundColor, photoColor);
-		}
+		return sameColor(foundColor, photoColor);
 	}
 
 	private Color averageColor(ArrayList<Color> colors) {
