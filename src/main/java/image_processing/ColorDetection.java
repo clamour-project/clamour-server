@@ -95,7 +95,7 @@ public class ColorDetection {
 		return averageColor(colors);
 	}
 
-	private boolean sameColor(Color c1, Color c2) {
+	private static boolean sameColor(Color c1, Color c2) {
 		float hsb1[] = new float[3];
 		Color.RGBtoHSB(c1.getRed(), c1.getGreen(), c1.getBlue(), hsb1);
 		float hsb2[] = new float[3];
@@ -106,6 +106,51 @@ public class ColorDetection {
 			return Math.abs(hsb1[1] - hsb2[1]) < 0.2f && Math.abs(hsb1[2] - hsb2[2]) < 0.2f;
 		else
 			return false;
+	}
+
+	/**
+	 * Says if color on the photo matches generated color.
+	 *
+	 * @param found - complementary color or one of adjacent colors
+	 * @param photo - main color on the photo of potential item
+	 * @return
+	 */
+	public static boolean colorFits(int found, int photo) {
+		Color foundColor = new Color(found);
+		Color photoColor = new Color(photo);
+
+		float hsb2[] = new float[3];
+		float hsb3[] = new float[3];
+
+		Color.RGBtoHSB(foundColor.getRed(), foundColor.getGreen(), foundColor.getBlue(), hsb2);
+		Color.RGBtoHSB(photoColor.getRed(), photoColor.getGreen(), photoColor.getBlue(), hsb3);
+
+		if (ColorWheel.defineArea(foundColor)!=ColorWheel.defineArea(photoColor))
+			return false;
+
+		if ((hsb2[1]>0.6f  && hsb2[1]<0.4f) && (hsb2[2]>0.6f  && hsb2[2]<0.4f))
+			return ColorWheel.defineArea(foundColor)==ColorWheel.defineArea(photoColor);
+		else {
+			if (hsb2[1] > 0.8) {
+				hsb2[1] -= 0.4f;
+			}else if (hsb2[1] > 0.6) {
+				hsb2[1] -= 0.2f;
+			}else if (hsb2[1] < 0.4) {
+				hsb2[1] += 0.3f;
+			}
+
+			if (hsb2[2] > 0.8) {
+				hsb2[2] -= 0.4f;
+			}else if (hsb2[2] < 0.6) {
+				hsb2[2] += 0.2f;
+			}else if (hsb2[2] < 0.4) {
+				hsb2[2] += 0.3f;
+			}
+
+			foundColor = new Color(Color.HSBtoRGB(hsb2[0], hsb2[1], hsb2[2]));
+
+			return sameColor(foundColor, photoColor);
+		}
 	}
 
 	private Color averageColor(ArrayList<Color> colors) {

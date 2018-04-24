@@ -165,13 +165,28 @@ public class ColorWheel {
 		this.hsb = new float[3];
 		Color.RGBtoHSB(mainColor.getRed(), mainColor.getGreen(), mainColor.getBlue(), hsb);
 
-		if (hsb[1] > 0.6f || hsb[1] < 0.3f) {
-			System.out.println(hsb[1]);
-			hsb[1] = 0.6f;
+		if (hsb[1] > 0.7) {
+			hsb[1] -= 0.7;
 		}
-		if (hsb[2] > 0.6f || hsb[2] < 0.3f) {
-			System.out.println(hsb[2]);
-			hsb[2] = 0.6f;
+
+		if (hsb[1] > 0.5) {
+			hsb[1] -= 0.4;
+		}
+
+		if (hsb[1] > 0.3) {
+			hsb[1] -= 0.2;
+		}
+
+		if (hsb[2] > 0.7) {
+			hsb[2] -= 0.7;
+		}
+
+		if (hsb[2] > 0.5) {
+			hsb[2] -= 0.4;
+		}
+
+		if (hsb[2] > 0.3) {
+			hsb[2] -= 0.2;
 		}
 
 		float delta;
