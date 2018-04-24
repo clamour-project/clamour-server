@@ -19,7 +19,7 @@ public class ColorDetection {
 		name = filename;
 
 		try {
-			image = ImageIO.read(new File("photos/" + name + ".jpg"));
+			image = ImageIO.read(new File("src/main/java/image_processing/photos/" + name + ".jpg"));
 		}catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -180,7 +180,7 @@ public class ColorDetection {
 	}
 
 	private void showColorCombination() {
-		colorWheel.displayResult("photos/" + name + "_colors.png");
+		colorWheel.displayResult("src/main/java/image_processing/photos/" + name + "_colors.png");
 		System.out.println("Color combinations generated.");
 	}
 
