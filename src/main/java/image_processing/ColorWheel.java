@@ -29,7 +29,7 @@ public class ColorWheel {
 	public ArrayList<Color> complementaryColors() {
 		ArrayList<Color> list = new ArrayList<>();
 		if (wheel==null)
-			calcSimpleWheel();
+			calcAdvancedWheel();
 		list.add(mainColor);
 		list.add(newColor(wheel[6]));
 		list.add(WHITE);
@@ -40,7 +40,7 @@ public class ColorWheel {
 	public ArrayList<Color> adjacentColors() {
 		ArrayList<Color> list = new ArrayList<>();
 		if (wheel==null)
-			calcSimpleWheel();
+			calcAdvancedWheel();
 		list.add(mainColor);
 		list.add(newColor(wheel[1]));
 		list.add(newColor(wheel[11]));
@@ -172,9 +172,9 @@ public class ColorWheel {
 		}else if (hsb[1] > 0.5) {
 			hsbOther[1] = hsb[1] - 0.2f;
 		}else if (hsb[1] < 0.3) {
-			hsbOther[1]  = hsb[1] + 0.3f;
+			hsbOther[1] = hsb[1] + 0.3f;
 		}else
-			hsbOther[1]  = hsb[1];
+			hsbOther[1] = hsb[1];
 
 		if (hsb[2] > 0.7) {
 			hsbOther[2] = hsb[2] - 0.4f;
@@ -183,7 +183,7 @@ public class ColorWheel {
 		}else if (hsb[2] < 0.3) {
 			hsbOther[2] = hsb[2] + 0.3f;
 		}else
-			hsbOther[2]  = hsb[2];
+			hsbOther[2] = hsb[2];
 
 
 		float delta;
@@ -220,8 +220,6 @@ public class ColorWheel {
 		int i=0, h=0;
 		int offset = 20;
 		int size = 70;
-
-		//calcAdvancedWheel();
 
 		for (Color c : complementaryColors()) {
 			for (int j=0; j<size; j++) {
