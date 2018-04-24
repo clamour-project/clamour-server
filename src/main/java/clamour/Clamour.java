@@ -34,14 +34,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.google.cloud.datastore.*;
+import com.googlecode.objectify.cmd.Query;
 
 import image_processing.ColorDetection;
+import datastore_classes.ImageEntity;
+import datastore_classes.OfyService;
 
 @WebServlet(name = "ClamourAppEngine", urlPatterns = { "/clamour-api" })
 public class Clamour extends HttpServlet {
  
 	private static final long serialVersionUID = -5935880022820879027L;
-
  
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) {
@@ -77,17 +79,22 @@ public class Clamour extends HttpServlet {
 			// response from api
 			JSONObject respFromApi = apiClient.requestToApi(requestToApi);
 			String mainType = getMainType(respFromApi);
-	//		List<String> typesList = new ArrayList<String>();				
-	//		while(clothesTypes.hasNext())
-	//			typesList.add(clothesTypes.next());
 			
 			List<String> suitableTypes = findSuitableTypes(mainType);
 			
 			BufferedImage image = decoder(base64Image.toString());
 			ColorDetection cd = new ColorDetection(image);
 			// matching colors
-			ArrayList<Color> cmpColors = cd.getComplementaryColors();
+			ArrayList<Color> cmpColors = cd.getComplementaryColors(); 
 			ArrayList<Color> adjColors = cd.getAdjacentColors();
+			 
+			adjColors.remove(0);
+			cmpColors.remove(cmpColors.size()-1);
+			cmpColors.remove(cmpColors.size()-1);
+			
+			List<Color> suitableColors = new ArrayList<>();
+			suitableColors.addAll(cmpColors);
+			suitableColors.addAll(adjColors);
 			
 			JSONObject resp = new JSONObject();
 			try {
@@ -98,12 +105,12 @@ public class Clamour extends HttpServlet {
 				for(String type:suitableTypes)
 					resp.append("suitable-types", type);
 				
-				// add detected colors to response
-				for(Color color : cmpColors)
-				    resp.append("coplementary-colors", getJSONColor(color));
-				for(Color color : adjColors)
-				    resp.append("adjacent-colors", getJSONColor(color));
+				for (ImageEntity im : getSuitableClothes(suitableTypes, suitableColors))
+					resp.append("suitable-clothes", im.getBase64Code());
 				
+				// add detected colors to response
+				for(Color color : suitableColors)
+				    resp.append("suitable-colors", getJSONColor(color));
 				
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -118,6 +125,30 @@ public class Clamour extends HttpServlet {
 			e2.printStackTrace();
 		}
 	}
+	
+	private List<ImageEntity> getSuitableClothes(List<String> types, List<Color> suitableColors) {
+		Query query = OfyService.ofy().load().type(ImageEntity.class);
+		Query currQuery = query;
+		List<ImageEntity> suitableImages = new ArrayList<>();
+		
+		for(String type:types) {
+			currQuery = query.filter("type =", type); 
+			suitableImages.addAll(currQuery.list()); 
+		}
+		
+		List<ImageEntity> res = new ArrayList<>();
+		
+		ImageEntity currImEntity;
+		for(int i = 0; i<suitableImages.size(); i++) {
+			currImEntity = suitableImages.get(i);
+			for(Color color : suitableColors)
+				if(ColorDetection.colorFits(color.getRGB(), currImEntity.getColor())) {
+					res.add(currImEntity);
+					break;
+				}
+		}
+		return res; 
+	}  
 	
 	private String getMainType(JSONObject resp) {
 		String priorityType = "";
