@@ -17,6 +17,7 @@ public class ColorWheel {
 
 	private Color mainColor;
 	private float hsb[];
+	private float hsbOther[];
 	private int area;
 	private float wheel[];
 
@@ -51,7 +52,7 @@ public class ColorWheel {
 	public ArrayList<Color> triadColors() {
 		ArrayList<Color> list = new ArrayList<>();
 		if (wheel==null)
-			calcSimpleWheel();
+			calcAdvancedWheel();
 		list.add(mainColor);
 		list.add(newColor(wheel[5]));
 		list.add(newColor(wheel[7]));
@@ -63,7 +64,7 @@ public class ColorWheel {
 	public ArrayList<Color> tetradColors() {
 		ArrayList<Color> list = new ArrayList<>();
 		if (wheel==null)
-			calcSimpleWheel();
+			calcAdvancedWheel();
 		list.add(mainColor);
 		list.add(newColor(wheel[3]));
 		list.add(newColor(wheel[6]));
@@ -163,31 +164,27 @@ public class ColorWheel {
 	private void calcAdvancedWheel() {
 		this.wheel = new float[12];
 		this.hsb = new float[3];
+		this.hsbOther = new float[3];
 		Color.RGBtoHSB(mainColor.getRed(), mainColor.getGreen(), mainColor.getBlue(), hsb);
 
 		if (hsb[1] > 0.7) {
-			hsb[1] -= 0.7;
-		}
-
-		if (hsb[1] > 0.5) {
-			hsb[1] -= 0.4;
-		}
-
-		if (hsb[1] > 0.3) {
-			hsb[1] -= 0.2;
-		}
+			hsbOther[1] = hsb[1] - 0.4f;
+		}else if (hsb[1] > 0.5) {
+			hsbOther[1] = hsb[1] - 0.2f;
+		}else if (hsb[1] < 0.3) {
+			hsbOther[1]  = hsb[1] + 0.3f;
+		}else
+			hsbOther[1]  = hsb[1];
 
 		if (hsb[2] > 0.7) {
-			hsb[2] -= 0.7;
-		}
+			hsbOther[2] = hsb[2] - 0.4f;
+		}else if (hsb[2] < 0.5) {
+			hsbOther[2] = hsb[2] + 0.2f;
+		}else if (hsb[2] < 0.3) {
+			hsbOther[2] = hsb[2] + 0.3f;
+		}else
+			hsbOther[2]  = hsb[2];
 
-		if (hsb[2] > 0.5) {
-			hsb[2] -= 0.4;
-		}
-
-		if (hsb[2] > 0.3) {
-			hsb[2] -= 0.2;
-		}
 
 		float delta;
 		if (area!=11)
@@ -210,14 +207,12 @@ public class ColorWheel {
 				times = areaSize(area+i-12)/areaSize;
 				wheel[i] = (colorSwitch[area + 1 + i - 12] - delta * times) * SCALE;
 			}
-			//System.out.println(wheel[i]);
 		}
-
 	}
 
 	private Color newColor(float hue) {
 		hsb[0] = hue;
-		return new Color(Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]));
+		return new Color(Color.HSBtoRGB(hsb[0], hsbOther[1], hsbOther[2]));
 	}
 
 	public void displayResult(String name) {
@@ -246,26 +241,6 @@ public class ColorWheel {
 			}
 			i++;
 		}
-		/*i=0;
-		h++;
-		for (Color c : triadColors()) {
-			for (int j=0; j<size; j++) {
-				for (int k=0; k<size; k++) {
-					result.setRGB(offset+size*i+j, offset*(h+1)+size*h+k, c.getRGB());
-				}
-			}
-			i++;
-		}
-		i=0;
-		h++;
-		for (Color c : tetradColors()) {
-			for (int j=0; j<size; j++) {
-				for (int k=0; k<size; k++) {
-					result.setRGB(offset+size*i+j, offset*(h+1)+size*h+k, c.getRGB());
-				}
-			}
-			i++;
-		}*/
 		i=0;
 		h++;
 		for (Color c : all()) {
