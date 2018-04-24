@@ -19,7 +19,7 @@ public class ColorDetection {
 		name = filename;
 
 		try {
-			image = ImageIO.read(new File("src/main/java/image_processing/photos/" + name + ".jpg"));
+			image = ImageIO.read(new File("photos/" + name + ".jpg"));
 		}catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -30,12 +30,12 @@ public class ColorDetection {
 		System.out.println("Main color determined.");
 		colorWheel = new ColorWheel(mainColor);
 	}
-	
+
 	public ColorDetection(BufferedImage im) {
 		image = im;
-		
+
 		setSobel(image);
-		
+
 		mainColor = determineColor();
 		System.out.println("Main color determined.");
 		colorWheel = new ColorWheel(mainColor);
@@ -170,7 +170,7 @@ public class ColorDetection {
 	public ArrayList<Color> getComplementaryColors() {
 		return colorWheel.complementaryColors();
 	}
-	
+
 	public ArrayList<Color> getAdjacentColors() {
 		return colorWheel.adjacentColors();
 	}
@@ -180,14 +180,19 @@ public class ColorDetection {
 	}
 
 	private void showColorCombination() {
-		colorWheel.displayResult("src/main/java/image_processing/photos/" + name + "_colors.png");
+		colorWheel.displayResult("photos/" + name + "_colors.png");
 		System.out.println("Color combinations generated.");
 	}
 
 	public static void main(String[] args) {
-		String photo = "dress";
+		String photo = "jeans";
 		// file to read = "src/main/java/image_processing/photos/" + photo + ".jpg";
-		ColorDetection cd = new ColorDetection(photo);
-		cd.showColorCombination();
+		ColorDetection cd1 = new ColorDetection(photo);
+		ColorDetection cd2 = new ColorDetection("shirt");
+		boolean fits = ColorDetection.colorFits(cd1.getComplementaryColors().get(2).getRGB(), cd2.getComplementaryColors().get(0).getRGB());
+		System.out.println(fits);
+		//cd1.getComplementaryColors().get(1).getRGB();
+		cd1.showColorCombination();
+		cd2.showColorCombination();
 	}
 }
