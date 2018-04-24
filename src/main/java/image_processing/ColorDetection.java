@@ -120,10 +120,7 @@ public class ColorDetection {
 		Color photoColor = new Color(photo);
 
 		float hsb2[] = new float[3];
-		float hsb3[] = new float[3];
-
 		Color.RGBtoHSB(foundColor.getRed(), foundColor.getGreen(), foundColor.getBlue(), hsb2);
-		Color.RGBtoHSB(photoColor.getRed(), photoColor.getGreen(), photoColor.getBlue(), hsb3);
 
 		if (ColorWheel.defineArea(foundColor)!=ColorWheel.defineArea(photoColor))
 			return false;
@@ -131,24 +128,6 @@ public class ColorDetection {
 		if ((hsb2[1]>0.6f  && hsb2[1]<0.4f) && (hsb2[2]>0.6f  && hsb2[2]<0.4f))
 			return ColorWheel.defineArea(foundColor)==ColorWheel.defineArea(photoColor);
 		else {
-			if (hsb2[1] > 0.8) {
-				hsb2[1] -= 0.4f;
-			}else if (hsb2[1] > 0.6) {
-				hsb2[1] -= 0.2f;
-			}else if (hsb2[1] < 0.4) {
-				hsb2[1] += 0.3f;
-			}
-
-			if (hsb2[2] > 0.8) {
-				hsb2[2] -= 0.4f;
-			}else if (hsb2[2] < 0.6) {
-				hsb2[2] += 0.2f;
-			}else if (hsb2[2] < 0.4) {
-				hsb2[2] += 0.3f;
-			}
-
-			foundColor = new Color(Color.HSBtoRGB(hsb2[0], hsb2[1], hsb2[2]));
-
 			return sameColor(foundColor, photoColor);
 		}
 	}
