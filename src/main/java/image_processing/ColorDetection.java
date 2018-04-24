@@ -13,6 +13,7 @@ public class ColorDetection {
 	private BufferedImage image;
 	private int[][] sobel;
 	private ColorWheel colorWheel;
+	private Color mainColor;
 
 	public ColorDetection(String filename) {
 		name = filename;
@@ -25,7 +26,7 @@ public class ColorDetection {
 
 		setSobel(image);
 
-		Color mainColor = determineColor();
+		mainColor = determineColor();
 		System.out.println("Main color determined.");
 		colorWheel = new ColorWheel(mainColor);
 	}
@@ -35,7 +36,7 @@ public class ColorDetection {
 		
 		setSobel(image);
 		
-		Color mainColor = determineColor();
+		mainColor = determineColor();
 		System.out.println("Main color determined.");
 		colorWheel = new ColorWheel(mainColor);
 	}
@@ -148,6 +149,10 @@ public class ColorDetection {
 	
 	public ArrayList<Color> getAdjacentColors() {
 		return colorWheel.adjacentColors();
+	}
+
+	public Color getMainColor() {
+		return mainColor;
 	}
 
 	private void showColorCombination() {
